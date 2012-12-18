@@ -213,6 +213,14 @@
             var offsetxd = margin;
             var offsetyd = (height / 2 - heightd / 2);
           }
+          
+          // Colors
+          var min = _.min(data.features, function(d) { return d.properties.POPULATION; });
+          var max = _.max(data.features, function(d) { return d.properties.POPULATION; });
+          var colorRange = d3.scale.linear()
+            .domain([min.properties.POPULATION, max.properties.POPULATION])
+            .range(['#ECE7F2', '#A6BDDB', '#2B8CBE'])
+            .clamp(true);
         
           // Render paths
           svg.selectAll('path')
@@ -222,7 +230,7 @@
             .attr('stroke', '#EDEDED')
             .attr('transform', 'translate(' + offsetxd + ', ' + offsetyd + ')')
             .attr('stroke', '#DEDEDE')
-            .attr('fill', '#222222')
+            .attr('fill', function(d) { return colorRange(d.properties.POPULATION); })
             .on('mouseover', function(d) {
               this.attr('stroke', 'red')
                 .attr('stroke-width', 3);
