@@ -75,6 +75,12 @@
         line-height: 100%;
       }
       
+      #county-chart-container {
+        width: 100%;
+        height: 400px;
+        border: 1px solid #DCDCDC;
+      }
+      
       
       /**
        * Responsive creen size styles
@@ -133,7 +139,8 @@
       </div>
     </script>
     
-    <script id="template-test-container" type="text/template">
+    <script id="template-chart-container" type="text/template">
+      <div id="county-chart-container"></div>
     </script>
     
     
@@ -149,6 +156,7 @@
     
     <script type="text/javascript" src="https://s3.amazonaws.com/data.minnpost/js/underscore-1.3.3/underscore-min.js"></script>
     <script type="text/javascript" src="https://s3.amazonaws.com/data.minnpost/js/jquery-custom-master-20120606/jquery-1.7.2.custom.min.js"></script>
+    <script type="text/javascript" src="https://s3.amazonaws.com/data.minnpost/js/r2d3-master-20121114/r2d3.v2.min.js"></script>
 
     
     <script type="text/javascript">
@@ -158,7 +166,79 @@
       (function($, w, undefined) {
         var dataDir = 'https://s3.amazonaws.com/data.minnpost/projects/minnpost-boundary-conversions/data/mn-county-2010/geojson-dp-60/';
  
+        // Fundtion to create visualization
+        var updateChart = function(data, containerSelector) {
+          // Handle inputs and updates
+          var width = parseInt($(containerSelector).width());
+          var height = parseInt($(containerSelector).height());
         
+          // Bounding code borrowed from: http://www.larsko.org/v/igdp/
+          var margin = width * 0.02;
+          var proj = d3.geo.mercator().scale(1).translate([0,0]);
+          var bounds0 = d3.geo.bounds(data);
+          var bounds = bounds0.map(proj);
+          var xscale = (width - 2 * margin) / Math.abs(bounds[1][0] - bounds[0][0]);
+          var yscale = (height - 2 * margin) / Math.abs(bounds[1][1] - bounds[0][1]);
+          var pscale = Math.min(xscale, yscale);
+          
+          // Create svg canvas
+          var svg = d3.select(containerSelector).append('svg')
+            .attr('width', width)
+            .attr('height', height);
+          
+          // Handle projection
+          var wscale = pscale;
+          proj.scale(pscale);
+          proj.translate(proj([-bounds0[0][0], -bounds0[1][1]]));
+          var path = d3.geo.path().projection(proj);
+          
+          // Handle svg canvas, dpeneding on orientation
+          if (xscale > yscale) {
+            var d = xscale * Math.abs(bounds[1][0] - bounds[0][0]) - yscale * Math.abs(bounds[1][0] - bounds[0][0]);
+            svg.attr('transform', 'translate(' + d / 2 + ', 0)');
+          }
+          else {
+            var d = yscale * Math.abs(bounds[1][1] - bounds[0][1]) - xscale * Math.abs(bounds[1][1] - bounds[0][1]);
+            svg.attr('transform', 'translate(0, ' + d / 5 + ')');
+          }
+          
+          // Handle offset, dpeneding on orientation
+          var widthd = proj(bounds0[0])[1];
+          var heightd = proj(bounds0[1])[0];
+          if (xscale > yscale) {
+            var offsetxd = (width / 2 - widthd / 2);
+            var offsetyd = margin;
+          }
+          else {
+            var offsetxd = margin;
+            var offsetyd = (height / 2 - heightd / 2);
+          }
+        
+          // Render paths
+          svg.selectAll('path')
+            .data(data.features)
+          .enter().append('path')
+            .attr('d', path)
+            .attr('stroke', '#EDEDED')
+            .attr('transform', 'translate(' + offsetxd + ', ' + offsetyd + ')')
+            .attr('stroke', '#DEDEDE')
+            .attr('fill', '#222222')
+            .on('mouseover', function(d) {
+              this.attr('stroke', 'red')
+                .attr('stroke-width', 3);
+              this.toFront(); // This screws up hover in IE7/8
+            })
+            .on('mouseout', function(d) {
+              this.attr('stroke', '#DEDEDE')
+                .attr('stroke-width', 1);
+            })
+            .on('click', function(d) {
+              this.attr('stroke', '#020202');
+            });
+            
+          // Remove loading
+          $('.loading').html('');
+          }
           
         // When ready, make the magic happen
         $(document).ready(function() {
@@ -166,7 +246,8 @@
 
           window.mn_county_2010 = function(data) {
             // Start application
-            
+            $('#application-container').html($('#template-chart-container').html());
+            updateChart(data, '#county-chart-container');
           };
           $.ajax({
             type: 'GET',
