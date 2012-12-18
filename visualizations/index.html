@@ -75,6 +75,19 @@
         line-height: 100%;
       }
       
+      .tooltip-body-container {
+        position: absolute;
+        z-index: 99;
+      }
+      .tooltip-container {
+        background-color: #E2E2E2;
+        border: 1px solid #777777;
+        padding: .5em 1em;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+      }
+      
       #county-chart-container {
         width: 100%;
         height: 400px;
@@ -143,6 +156,16 @@
       <div id="county-chart-container"></div>
     </script>
     
+    <script id="template-tooltip" type="text/template">
+      <div class="tooltip-container">
+        <h5><%= d.properties.NAME %> County</h5>
+        
+        Population: <strong><%= d3.format(',d')(d.properties.POPULATION) %></strong><br />
+        Permits: <strong><%= d3.format(',d')(d.properties.permits) %></strong><br />
+        Permits per population: <strong><%= d3.format('.2%')(d.properties.permitsPopulation) %></strong><br />
+      </div>
+    </script>
+    
     
     
     <!-- jQuery that is used on MinnPost site (ensures test environment) -->
@@ -165,12 +188,108 @@
       
       (function($, w, undefined) {
         var dataDir = 'https://s3.amazonaws.com/data.minnpost/projects/minnpost-boundary-conversions/data/mn-county-2010/geojson-dp-60/';
+        
+        var countyFirearmData = [
+          { county: 'Aitkin', permits: 496 },
+          { county: 'Anoka', permits: 7168 },
+          { county: 'Becker', permits: 625 },
+          { county: 'Beltrami', permits: 669 },
+          { county: 'Benton', permits: 797 },
+          { county: 'Big Stone', permits: 65 },
+          { county: 'Blue Earth', permits: 755 },
+          { county: 'Brown', permits: 285 },
+          { county: 'Carlton', permits: 912 },
+          { county: 'Carver', permits: 1638 },
+          { county: 'Cass', permits: 865 },
+          { county: 'Chippewa', permits: 220 },
+          { county: 'Chisago', permits: 1566 },
+          { county: 'Clay', permits: 437 },
+          { county: 'Clearwater', permits: 176 },
+          { county: 'Cook', permits: 256 },
+          { county: 'Cottonwood', permits: 145 },
+          { county: 'Crow Wing', permits: 1707 },
+          { county: 'Dakota', permits: 6587 },
+          { county: 'Dodge', permits: 308 },
+          { county: 'Douglas', permits: 980 },
+          { county: 'Faribault', permits: 251 },
+          { county: 'Fillmore', permits: 351 },
+          { county: 'Freeborn', permits: 381 },
+          { county: 'Goodhue', permits: 885 },
+          { county: 'Grant', permits: 129 },
+          { county: 'Hennepin', permits: 13793 },
+          { county: 'Houston', permits: 359 },
+          { county: 'Hubbard', permits: 442 },
+          { county: 'Isanti', permits: 1019 },
+          { county: 'Itasca', permits: 1483 },
+          { county: 'Jackson', permits: 136 },
+          { county: 'Kanabec', permits: 409 },
+          { county: 'Kandiyohi', permits: 800 },
+          { county: 'Kittson', permits: 70 },
+          { county: 'Koochiching', permits: 349 },
+          { county: 'Lac qui Parle', permits: 86 },
+          { county: 'Lake', permits: 329 },
+          { county: 'Lake of the Woods', permits: 106 },
+          { county: 'Le Sueur', permits: 439 },
+          { county: 'Lincoln', permits: 37 },
+          { county: 'Lyon', permits: 279 },
+          { county: 'Mahnomen', permits: 61 },
+          { county: 'Marshall', permits: 139 },
+          { county: 'Martin', permits: 254 },
+          { county: 'McLeod', permits: 615 },
+          { county: 'Meeker', permits: 390 },
+          { county: 'Mille Lacs', permits: 693 },
+          { county: 'Morrison', permits: 764 },
+          { county: 'Mower', permits: 476 },
+          { county: 'Murray', permits: 107 },
+          { county: 'Nicollet', permits: 358 },
+          { county: 'Nobles', permits: 240 },
+          { county: 'Norman', permits: 79 },
+          { county: 'Olmsted', permits: 2131 },
+          { county: 'Otter Tail', permits: 1650 },
+          { county: 'Pennington', permits: 182 },
+          { county: 'Pine', permits: 754 },
+          { county: 'Pipestone', permits: 101 },
+          { county: 'Polk', permits: 434 },
+          { county: 'Pope', permits: 191 },
+          { county: 'Ramsey', permits: 5498 },
+          { county: 'Red Lake', permits: 78 },
+          { county: 'Redwood', permits: 235 },
+          { county: 'Renville', permits: 269 },
+          { county: 'Rice', permits: 954 },
+          { county: 'Rock', permits: 44 },
+          { county: 'Roseau', permits: 262 },
+          { county: 'Scott', permits: 2566 },
+          { county: 'Sherburne', permits: 2434 },
+          { county: 'Sibley', permits: 265 },
+          { county: 'St. Louis', permits: 6330 },
+          { county: 'Stearns', permits: 2280 },
+          { county: 'Steele', permits: 512 },
+          { county: 'Stevens', permits: 134 },
+          { county: 'Swift', permits: 130 },
+          { county: 'Todd', permits: 593 },
+          { county: 'Traverse', permits: 74 },
+          { county: 'Wabasha', permits: 476 },
+          { county: 'Wadena', permits: 250 },
+          { county: 'Waseca', permits: 250 },
+          { county: 'Washington', permits: 5310 },
+          { county: 'Watonwan', permits: 176 },
+          { county: 'Wilkin', permits: 66 },
+          { county: 'Winona', permits: 693 },
+          { county: 'Wright', permits: 2768 },
+          { county: 'Yellow Medicine', permits: 165 }
+        ];
+        
+        // Tooltip placeholder
+        var templateTooltip = $('#template-tooltip').html();
+        var $tooltip = $('<div>').addClass('tooltip-body-container').hide().appendTo('body');
  
-        // Fundtion to create visualization
+        // Function to create visualization
         var updateChart = function(data, containerSelector) {
+          var $container = $(containerSelector);
+        
           // Handle inputs and updates
-          var width = parseInt($(containerSelector).width());
-          var height = parseInt($(containerSelector).height());
+          var width = parseInt($container.width());
+          var height = parseInt($container.height());
         
           // Bounding code borrowed from: http://www.larsko.org/v/igdp/
           var margin = width * 0.02;
@@ -215,11 +334,11 @@
           }
           
           // Colors
-          var min = _.min(data.features, function(d) { return d.properties.POPULATION; });
-          var max = _.max(data.features, function(d) { return d.properties.POPULATION; });
+          var min = _.min(data.features, function(d) { return d.properties.permitsPopulation; });
+          var max = _.max(data.features, function(d) { return d.properties.permitsPopulation; });
           var colorRange = d3.scale.linear()
-            .domain([min.properties.POPULATION, max.properties.POPULATION])
-            .range(['#ECE7F2', '#A6BDDB', '#2B8CBE'])
+            .domain(d3.range(min.properties.permitsPopulation, max.properties.permitsPopulation, 0.01))
+            .range(['#FCFBFD', '#EFEDF5', '#DADAEB', '#BCBDDC', '#9E9AC8', '#807DBA', '#6A51A3', '#4A1486'])
             .clamp(true);
         
           // Render paths
@@ -230,15 +349,24 @@
             .attr('stroke', '#EDEDED')
             .attr('transform', 'translate(' + offsetxd + ', ' + offsetyd + ')')
             .attr('stroke', '#DEDEDE')
-            .attr('fill', function(d) { return colorRange(d.properties.POPULATION); })
+            .attr('fill', function(d) { return colorRange(d.properties.permitsPopulation); })
             .on('mouseover', function(d) {
-              this.attr('stroke', 'red')
+              this.attr('stroke', '#898989')
                 .attr('stroke-width', 3);
+                
               this.toFront(); // This screws up hover in IE7/8
+              
+              $tooltip
+                .css('top', ($container.offset().top + 10) + 'px')
+                .css('left', ($container.offset().left + 10) + 'px')
+                .html(_.template(templateTooltip, { d: d }))
+                .show();
             })
             .on('mouseout', function(d) {
               this.attr('stroke', '#DEDEDE')
                 .attr('stroke-width', 1);
+                
+              $tooltip.hide();
             })
             .on('click', function(d) {
               this.attr('stroke', '#020202');
@@ -253,6 +381,19 @@
           $('#application-container').html($('#template-loading').html());
 
           window.mn_county_2010 = function(data) {
+            // Add in permit data
+            data.features = _.map(data.features, function(d) {
+              var found = false;
+              _.each(countyFirearmData, function(c) {
+                if (c.county == d.properties.NAME) {
+                  d.properties.permits = c.permits;
+                  d.properties.permitsPopulation = c.permits / d.properties.POPULATION;
+                  found = true;
+                }
+              });
+              return d;
+            });
+          
             // Start application
             $('#application-container').html($('#template-chart-container').html());
             updateChart(data, '#county-chart-container');
