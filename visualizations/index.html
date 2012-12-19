@@ -94,7 +94,7 @@
       }
       
       #application-container {
-        min-height: 400px;
+        min-height: 430px;
       }
       #county-chart-container {
         width: 100%;
@@ -123,18 +123,23 @@
         padding: 0 .5em;
       }
       .by-the-numbers .number-block .number-description {
-        font-size: 1.55em;
+        font-size: 1.15em;
         line-height: 1.25em;
         padding: 0 .5em;
       }
       .by-the-numbers .number-block .number-source {
-        font-size: .75em;
+        font-size: .65em;
         padding: 0 .5em;
       }
       .by-the-numbers .number-block-map {
         width: 66.6666666%;
         float: right;
         padding: 0;
+      }
+      .by-the-numbers sub {
+        color: #676767;
+        font-style: italic;
+        font-size: .65em;
       }
       
       .number-block-map h5 {
@@ -172,6 +177,9 @@
       }
       .things-dont ol {
         font-size: 1.1em;
+      }
+      .things-dont h3 {
+        text-align: center;
       }
       
       /**
@@ -224,20 +232,20 @@
             <img src="https://s3.amazonaws.com/data.minnpost/projects/minnpost-firearm-analysis/img/star-empty.png" />
             <img src="https://s3.amazonaws.com/data.minnpost/projects/minnpost-firearm-analysis/img/star-empty.png" />
           </div>
-          <div class="number-description">Stars</div>
-          <div class="number-source">Stars given to Minnesota by the <a href="http://www.bradycampaign.org/stategunlaws/scorecard/MN/" target="_blank">Brady Scorecard</a> (2011) meaning that Minnesota has "weak gun laws that help feed the illegal gun market and allows the sale of guns without background checks and put children at risk".</div>
-        </div>
-        
-        <div class="number-block">
-          <div class="number">495</div>
-          <div class="number-description">Firearms seizures in 2011</div>
-          <div class="number-source">Firearms seizures in Minnesota 2011 according to the MN State Auditor</div>
+          <div class="number-description">Minnesota's gun law ranking, according to the Brady Scorecard, which claims the state has "weak gun laws that help feed the illegal gun market and allows the sale of guns without background checks and put children at risk."</div>
+          <div class="number-source">Source <a href="http://www.bradycampaign.org/stategunlaws/scorecard/MN/" target="_blank">Brady Scorecard</a></div>
         </div>
         
         <div class="number-block">
           <div class="number">91,221</div>
-          <div class="number-description">Permits to Carry</div>
-          <div class="number-source">Number of all valid Permits to Carry according to the <a href="https://dps.mn.gov/divisions/bca/Documents/2011%20Permit%20to%20Carry%20Year%20End%20Report%20Final.pdf" target="_blank">MN Dept of Public Safety</a> (2011)</div>
+          <div class="number-description">Active permits to carry as of Dec 31, 2011 <sub>1</sub></div>
+          <div class="number-source">Source <a href="https://dps.mn.gov/divisions/bca/Documents/2011%20Permit%20to%20Carry%20Year%20End%20Report%20Final.pdf" target="_blank">MN Dept of Public Safety</a></div>
+        </div>
+        
+        <div class="number-block">
+          <div class="number">337,534</div>
+          <div class="number-description">Background checks in 2011 </div>
+          <div class="number-source">Source <a href="http://www.fbi.gov/about-us/cjis/nics/reports/20121203_1998_2012_state_monthly_totals.pdf" target="_blank">National Instant Criminal Background Checks System</a>.</div>
         </div>
         
         <div class="number-block number-block-map">
@@ -246,21 +254,21 @@
         </div>
         
         <div class="number-block">
-          <div class="number">337,534</div>
-          <div class="number-description">Background checks</div>
-          <div class="number-source">Background checks in 2011 according to the <a href="http://www.fbi.gov/about-us/cjis/nics/reports/20121203_1998_2012_state_monthly_totals.pdf" target="_blank">National Instant Criminal Background Checks System</a>.</div>
-        </div>
-        
-        <div class="number-block">
-          <div class="number">7 days</div>
-          <div class="number-description">Waiting period</div>
-          <div class="number-source">Waiting period for permit to purchas?? <a href="http://www.bradycampaign.org/stategunlaws/scorecard/MN/" target="_blank">Brady Scorecard</a> (2011)</div>
+          <div class="number">5-7 days</div>
+          <div class="number-description">Waiting period to purchase handguns or "assault weapons" <sub>3</sub></div>
+          <div class="number-source">Source <a href="https://www.revisor.mn.gov/statutes/?id=624.7132&year=2012" target="_blank">MN Revisor of Statutes</a></div>
         </div>
         
         <div class="number-block">
           <div class="number">$64,545</div>
-          <div class="number-description">NRA money</div>
-          <div class="number-source">NRA money given to Minnesota Congress persons in 2012 according to <a href="http://www.opensecrets.org/outsidespending/recips.php?cmte=C90013301&cycle=2012" target="_blank">Open Secrets</a>.</div>
+          <div class="number-description">NRA campaign contributions to Minnesota Congresspeople in 2012 <sub>2</sub></div>
+          <div class="number-source">Source <a href="http://www.opensecrets.org/outsidespending/recips.php?cmte=C90013301&cycle=2012" target="_blank">Open Secrets</a></div>
+        </div>
+        
+        <div class="number-block">
+          <div class="number">495</div>
+          <div class="number-description">Firearms seizures in 2011</div>
+          <div class="number-source">Source <a href="http://www.auditor.state.mn.us/reports/gid/2011/forfeiture/forfeiture_11_report.pdf" target="_blank">MN State Auditor</a></div>
         </div>
         
         <!--
@@ -286,20 +294,23 @@
       </div>
       
       <div class="things-dont clear-block">
-        <h3>Things we don't know</h3>
+        <h3>What we don't know about guns in Minnesota:</h3>
         <ol>
-          <li>How many guns are in Minnesota.</li>
-          <li>Amount of ammunition in Minnesota.</li>
-          <li>Where are guns in Minnesota.</li>
-          <li>How many guns are in each county in Minnesota.</li>
-          <li>How many guns owners are in Minnesota.</li>
-          <li>How many guns owners are each county in Minnesota.</li>
-          <li>The number guns sold at gun shows in Minnesota.</li>
-          <li>The number of types of guns in Minnesota.</li>
+          <li>The total number of guns in the state.</li>
+          <li>The amount of ammunition sold or owned.</li>
+          <li>The number of gun owners .</li>
+          <li>A breakdown of the types of guns sold in Minnesota.</li>
+          <li>The number of guns sold at gunshows.</li>
+          <li>The number of guns trafficked and sold illegally.</li>
         </ol>
       </div>
       
-      <p class="footnote">Population data from <a href="http://www.gis.leg.mn/metadata/county2010.htm" target="_blank">2010 MN State Legislature GIS county files</a>.  Permit to Carry numbers from <a href="https://dps.mn.gov/divisions/bca/Documents/2011%20Permit%20to%20Carry%20Year%20End%20Report%20Final.pdf" target="_blank">2011 MN Department of Public Safety report</a>.  <a href="http://thenounproject.com/noun/star/#icon-No431" target="_blank">Star</a> icon from The Noun Project</p>
+      <p class="footnote">Population data from <a href="http://www.gis.leg.mn/metadata/county2010.htm" target="_blank">2010 MN State Legislature GIS county files</a>.  Permit to Carry numbers from <a href="https://dps.mn.gov/divisions/bca/Documents/2011%20Permit%20to%20Carry%20Year%20End%20Report%20Final.pdf" target="_blank">2011 MN Department of Public Safety report</a>.  <a href="http://thenounproject.com/noun/star/#icon-No431" target="_blank">Star</a> icon from The Noun Project.
+      <br /><br />
+      <sub>1</sub> Report of valid permits for applications received from 05/01/2003 to 12/31/2011 and valid on or before 12/31/2011 for all the counties.<br />
+      <sub>2</sub> The total NRA contributions number is both contributions to campaigns and money spent on behalf of candidates, but independent of their campaigns.<br />
+      <sub>3</sub> The <a href="https://www.revisor.mn.gov/statutes/?id=624.7132&year=2012" target="_blank">law defining the waiting period</a> is not precise and refers to both a 5 business day and 7 day waiting period.
+      </p>
     </div>
     
     
