@@ -78,14 +78,19 @@
       .tooltip-body-container {
         position: absolute;
         z-index: 99;
+        top: 0;
+        right: 0;
       }
       .tooltip-container {
-        background-color: #E2E2E2;
+        background-color: #EBEBEB;
+        background-color: rgba(230, 230, 230, 0.5);
         border: 1px solid #777777;
         padding: .5em 1em;
         -webkit-border-radius: 5px;
         -moz-border-radius: 5px;
         border-radius: 5px;
+        text-align: left;
+        font-size: .75em;
       }
       
       #application-container {
@@ -109,6 +114,7 @@
         text-align: center;
         padding: 0;
         margin: 1em 0 0 0;
+        position: relative;
       }
       .by-the-numbers .number-block .number {
         font-size: 4em;
@@ -283,7 +289,7 @@
     
     <script id="template-tooltip" type="text/template">
       <div class="tooltip-container">
-        <h5><%= d.properties.NAME %> County</h5>
+        <h4><%= d.properties.NAME %> County</h4>
         
         Population: <strong><%= d3.format(',d')(d.properties.POPULATION) %></strong><br />
         Permits: <strong><%= d3.format(',d')(d.properties.permits) %></strong><br />
@@ -406,7 +412,8 @@
         
         // Tooltip placeholder
         var templateTooltip = $('#template-tooltip').html();
-        var $tooltip = $('<div>').addClass('tooltip-body-container').hide().appendTo('body');
+        var $tooltip = $('<div>').addClass('tooltip-body-container').hide()
+          .appendTo('.number-block-map');
  
         // Function to create visualization
         var updateChart = function(data, containerSelector) {
@@ -491,8 +498,6 @@
               //this.toFront(); // This screws up hover in IE7/8
               
               $tooltip
-                .css('top', ($container.offset().top + 10) + 'px')
-                .css('left', ($container.offset().left + 10) + 'px')
                 .html(_.template(templateTooltip, { d: d }))
                 .show();
             })
